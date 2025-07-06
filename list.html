@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Tasks</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to To-Do List!</h1>
+    
+    <h2>Your Tasks</h2>
+    <br>
+    <div id="messageBox" class="message-box"></div>
+
+    <ul id="taskList"></ul>
+    <br>
+
+    <div class="flex-buttons">
+      <button id="backBtn">Back</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+      alert("You are not logged in.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    // Load tasks from backend
+    const formData = new FormData();
+    formData.append("user_id", user_id);
+
+    fetch("get_tasks.php", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        displayTasks(data.tasks);
+      } else {
+        showMessage("Failed to load tasks.", "error");
+      }
+    });
+
+    function displayTasks(tasks) {
+      const taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      if (tasks.length === 0) {
+        taskList.innerHTML = "<p>No tasks found.</p>";
+        return;
+      }
+
+      tasks.forEach(task => {
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <input type="checkbox" ${task.is_completed == 1 ? "checked" : ""} data-id="${task.id}" class="complete-checkbox" />
+          <strong style="${task.is_completed == 1 ? 'text-decoration: line-through;' : ''}">
+            ${task.task}
+          </strong> <br> 
+          Due: ${task.due_date || "N/A"} | Priority: ${task.priority || "Medium"}
+        `;
+        li.setAttribute("data-id", task.id);
+
+        const checkbox = li.querySelector(".complete-checkbox");
+        checkbox.addEventListener("change", function (e) {
+          const checked = e.target.checked ? 1 : 0;
+
+          const updateData = new FormData();
+          updateData.append("task_id", task.id);
+          updateData.append("is_completed", checked);
+
+          fetch("update_status.php", {
+            method: "POST",
+            body: updateData
+          })
+          .then(res => res.json())
+          .then(data => {
+            showMessage(data.message, data.status);
+            setTimeout(() => location.reload(), 500);
+          });
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.classList.add("delete-btn");
+        delBtn.addEventListener("click", function () {
+          deleteTask(task.id);
+        });
+
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function deleteTask(taskId) {
+      const formData = new FormData();
+      formData.append("task_id", taskId);
+      formData.append("user_id", user_id);
+
+      fetch("delete_task.php", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        showMessage(data.message, data.status);
+        if (data.status === "success") {
+          setTimeout(() => location.reload(), 500);
+        }
+      });
+    }
+
+    function showMessage(msg, type) {
+      const box = document.getElementById("messageBox");
+      box.textContent = msg;
+      box.style.color = type === "success" ? "green" : "red";
+      box.style.display = "block";
+      setTimeout(() => {
+        box.style.display = "none";
+      }, 2000);
+    }
+
+    
+    document.getElementById("backBtn").addEventListener("click", function () {
+      window.location.href = "tasks.html";
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+      localStorage.clear();
+      window.location.href = "login.html";
+    });
+  });
+</script>
+</body>
+</html>
