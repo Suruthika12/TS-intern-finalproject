@@ -1,0 +1,1 @@
+TaskMate is a simple, responsive, and featured full-stack to-do list web application that helps users manage tasks with ease. Built with **HTML, CSS, JavaScript, PHP, and MySQL**, it supports user authentication, task priority, due dates, and completion tracking.
