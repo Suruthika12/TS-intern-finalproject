@@ -8,8 +8,6 @@ include 'db.php';
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
-
-// Basic validation
 if (empty($username) || empty($password)) {
     echo json_encode(["status" => "error", "message" => "Username and password required."]);
     exit;

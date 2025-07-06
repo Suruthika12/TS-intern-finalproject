@@ -10,7 +10,6 @@
   <div class="container">
     <h1>Welcome to To-Do List!</h1>
 
-    <!-- Task Form -->
     <form id="taskForm">
       <h2>Add New Tasks</h2>
       
@@ -39,20 +38,16 @@
       <button type="submit" id="submit">Add Task</button>
     </form>
 
-    <!-- Action Buttons -->
     <div class="flex-buttons">
       <button id="yourTasksBtn">Your Tasks</button>
       <button id="logoutBtn">Logout</button>
     </div>
 
-    <!-- Feedback Message Box -->
     <div id="messageBox" class="message-box"></div>
   </div>
 
-  <!-- JavaScript Section -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Check login status
       const user_id = localStorage.getItem("user_id");
       if (!user_id) {
         alert("You are not logged in.");
@@ -60,7 +55,6 @@
         return;
       }
 
-      // Add Task Handler
       document.getElementById("taskForm").addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -95,18 +89,15 @@
         });
       });
 
-      // Logout Handler
       document.getElementById("logoutBtn").addEventListener("click", function () {
         localStorage.clear();
         window.location.href = "login.html";
       });
 
-      // "Your Tasks" Page Navigation
       document.getElementById("yourTasksBtn").addEventListener("click", function () {
         window.location.href = "list.html";
       });
 
-      // Message Display
       function showMessage(msg, type) {
         const box = document.getElementById("messageBox");
         box.textContent = msg;

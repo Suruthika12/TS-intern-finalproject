@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $user = 'root';
-$pass = ''; // leave empty unless you set a password
+$pass = ''; 
 $db   = 'taskmate';
 
 $conn = new mysqli($host, $user, $pass, $db);

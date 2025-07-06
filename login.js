@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    submitBtn.disabled = true; // Disable button to prevent multiple clicks
+    submitBtn.disabled = true;
 
     const formData = new FormData();
     formData.append("username", username);
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(res => res.json())
     .then(data => {
-      submitBtn.disabled = false; // Re-enable after response
+      submitBtn.disabled = false; 
 
       if (data.status === "success") {
         localStorage.setItem("user_id", data.user_id);
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     })
     .catch(err => {
-      submitBtn.disabled = false; // Re-enable on error too
+      submitBtn.disabled = false; 
       console.error("Error during login:", err);
       alert("Something went wrong. Please try again.");
     });

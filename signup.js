@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    submitBtn.disabled = true; // 🔒 Disable the button during submission
+    submitBtn.disabled = true; 
 
     const formData = new FormData();
     formData.append("username", username);

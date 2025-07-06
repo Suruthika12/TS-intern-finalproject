@@ -9,13 +9,11 @@ header('Content-Type: application/json');
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
-// Basic validation
 if (empty($username) || empty($password)) {
     echo json_encode(["status" => "error", "message" => "Username and password required."]);
     exit;
 }
 
-// Check if user already exists
 $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -27,7 +25,6 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-// Insert new user
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
 $stmt->bind_param("ss", $username, $hashedPassword);
